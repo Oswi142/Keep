@@ -124,7 +124,7 @@ var objNota = {
   fecha: "",
   texto: ""
 };
-var formularioBuscar = document.querySelector("#formulario-buscar");
+var formularioBuscar = document.querySelector("#form-buscar");
 var tituloBuscar = document.querySelector("#titulo-buscar");
 function buscarNota(titulo) {
   for (var i = 0; i < listaNotas.length; i++) {

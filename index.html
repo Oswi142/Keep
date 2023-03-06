@@ -7,16 +7,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
+
     <div class="div-titulo">
       <h1>Google Keep</h1>
     </div>
     <div id="div-buscar">
         <h2>Buscar</h2>
-        <form id="formulario-buscar">
-            <input type="text" id="titulo-buscar" placeholder="Ingresa el titulo de la nota" />
+        <form id="form-buscar">
+            <input type="text" id="titulo-buscar" placeholder="Titulo" />
             <button type="submit" id="boton-buscar">Buscar</button>
         </form>
         <div id="div-buscado"></div>
+    </div>
+
+    <div class="contenedor">
+        <div class="div-form">
+          <h2>Crear</h2>
+          <form action="#" id="form">
+            <input type="text" id="titulo" placeholder="Titulo" />
+            <input type="text" id="texto" placeholder="Crear una nota" />
+            <button type="submit" id="boton-crear">Crear</button>
+          </form>
+        </div>
+
+        <div class="div-notasLista">
+          <h2>Notas</h2>
+          <div class="div-notas"></div>
+        </div>
     </div>
     <script src="./src/presenter.js"></script>
   </body>

@@ -5,7 +5,7 @@ const objNota = {
   texto: "",
 };
 
-const formularioBuscar = document.querySelector("#formulario-buscar");
+const formularioBuscar = document.querySelector("#form-buscar");
 const tituloBuscar = document.querySelector("#titulo-buscar");
 
 function buscarNota(titulo){
