@@ -125,47 +125,58 @@ function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key i
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var listaNotas = [];
-var objNota = {
+var ObjetoNota = {
   fecha: "",
   titulo: "",
   texto: ""
 };
-var editando = false;
-var formulario = document.querySelector("#form");
-var tituloInput = document.querySelector("#titulo");
-var textoInput = document.querySelector("#texto");
-var btnCrearInput = document.querySelector("#boton-crear");
-formulario.addEventListener("submit", validarFormulario);
-function validarFormulario(e) {
+var edited = false;
+var form = document.querySelector("#form");
+var InsertTittle = document.querySelector("#titulo");
+var InsertText = document.querySelector("#texto");
+var botonCrear = document.querySelector("#btn-crear");
+form.addEventListener("submit", validarForm);
+function validarForm(e) {
   e.preventDefault();
-  if (tituloInput.value === "" || textoInput.value === "") {
-    alert("Todos los campos se deben llenar");
+  if (InsertTittle.value === "" || InsertText.value === "") {
+    alert("Se deben llenar todos los campos");
     return;
   }
-  if (editando) {
-    editarNota();
-    editando = false;
+  if (edited) {
+    editNota();
+    edited = false;
   } else {
-    objNota.fecha = Date.now();
-    objNota.titulo = tituloInput.value;
-    objNota.texto = textoInput.value;
-    crearNota();
+    ObjetoNota.fecha = Date.now();
+    ObjetoNota.titulo = InsertTittle.value;
+    ObjetoNota.texto = InsertText.value;
+    createNota();
   }
-  listaNotas.map(function (nota) {
-    if (nota.fecha === objNota.fecha) {
-      nota.fecha = objNota.fecha;
-      nota.texto = objNota.texto;
-      nota.titulo = objNota.titulo;
-    }
-  });
-  refrescarHTML();
-  mostrarNotas();
-  formulario.reset();
-  formulario.querySelector('button[type="submit"]').textContent = "Agregar";
-  editando = false;
+  refreshHTML();
+  showNotas();
+  form.reset();
+  form.querySelector('button[type="submit"]').textContent = "Agregar";
+  edited = false;
 }
-function mostrarNotas() {
-  refrescarHTML();
+function deleteNota(titulo) {
+  listaNotas = listaNotas.filter(function (nota) {
+    return nota.titulo !== titulo;
+  });
+  refreshHTML();
+  showNotas();
+}
+function createNota() {
+  listaNotas.push(_objectSpread({}, ObjetoNota));
+  showNotas();
+  form.reset();
+  cleanObj();
+}
+function cleanObj() {
+  ObjetoNota.fecha = "";
+  ObjetoNota.titulo = "";
+  ObjetoNota.texto = "";
+}
+function showNotas() {
+  refreshHTML();
   var divNotas = document.querySelector(".div-notas");
   listaNotas.forEach(function (nota) {
     var fecha = nota.fecha,
@@ -174,22 +185,40 @@ function mostrarNotas() {
     var parrafo = document.createElement("p");
     parrafo.textContent = "".concat(fecha, " - ").concat(titulo, " - ").concat(texto, " - ");
     parrafo.dataset.id = fecha;
+    var editarBoton = document.createElement("button");
+    editarBoton.onclick = function () {
+      return cargarNota(nota);
+    };
+    editarBoton.textContent = "Editar";
+    editarBoton.classList.add("boton", "boton-editar");
+    parrafo.append(editarBoton);
+    var eliminarBoton = document.createElement("button");
+    eliminarBoton.onclick = function () {
+      return deleteNota(titulo);
+    };
+    eliminarBoton.textContent = "Eliminar";
+    eliminarBoton.classList.add("boton", "boton-eliminar");
+    parrafo.append(eliminarBoton);
     var hr = document.createElement("hr");
     divNotas.appendChild(parrafo);
     divNotas.appendChild(hr);
   });
 }
-function crearNota() {
-  listaNotas.push(_objectSpread({}, objNota));
-  mostrarNotas();
-  formulario.reset();
-  limpiarObjeto();
-}
-function refrescarHTML() {
+function refreshHTML() {
   var divNotas = document.querySelector(".div-notas");
   while (divNotas.firstChild) {
     divNotas.removeChild(divNotas.firstChild);
   }
+}
+function cargarNota(nota) {
+  var fecha = nota.fecha,
+    titulo = nota.titulo,
+    texto = nota.texto;
+  InsertTittle.value = titulo;
+  InsertText.value = texto;
+  ObjetoNota.fecha = fecha;
+  form.querySelector('button[type="submit"]').textContent = "Actualizar";
+  edited = true;
 }
 },{}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
