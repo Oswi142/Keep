@@ -118,28 +118,79 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"src/presenter.js":[function(require,module,exports) {
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var listaNotas = [];
 var objNota = {
-  titulo: "",
   fecha: "",
+  titulo: "",
   texto: ""
 };
-var formularioBuscar = document.querySelector("#form-buscar");
-var tituloBuscar = document.querySelector("#titulo-buscar");
-function buscarNota(titulo) {
-  for (var i = 0; i < listaNotas.length; i++) {
-    var tituloBuscado = listaNotas[i].titulo;
-    if (titulo == tituloBuscado) {
-      return notas[i];
+var editando = false;
+var formulario = document.querySelector("#form");
+var tituloInput = document.querySelector("#titulo");
+var textoInput = document.querySelector("#texto");
+var btnCrearInput = document.querySelector("#boton-crear");
+formulario.addEventListener("submit", validarFormulario);
+function validarFormulario(e) {
+  e.preventDefault();
+  if (tituloInput.value === "" || textoInput.value === "") {
+    alert("Todos los campos se deben llenar");
+    return;
+  }
+  if (editando) {
+    editarNota();
+    editando = false;
+  } else {
+    objNota.fecha = Date.now();
+    objNota.titulo = tituloInput.value;
+    objNota.texto = textoInput.value;
+    crearNota();
+  }
+  listaNotas.map(function (nota) {
+    if (nota.fecha === objNota.fecha) {
+      nota.fecha = objNota.fecha;
+      nota.texto = objNota.texto;
+      nota.titulo = objNota.titulo;
     }
+  });
+  refrescarHTML();
+  mostrarNotas();
+  formulario.reset();
+  formulario.querySelector('button[type="submit"]').textContent = "Agregar";
+  editando = false;
+}
+function mostrarNotas() {
+  refrescarHTML();
+  var divNotas = document.querySelector(".div-notas");
+  listaNotas.forEach(function (nota) {
+    var fecha = nota.fecha,
+      titulo = nota.titulo,
+      texto = nota.texto;
+    var parrafo = document.createElement("p");
+    parrafo.textContent = "".concat(fecha, " - ").concat(titulo, " - ").concat(texto, " - ");
+    parrafo.dataset.id = fecha;
+    var hr = document.createElement("hr");
+    divNotas.appendChild(parrafo);
+    divNotas.appendChild(hr);
+  });
+}
+function crearNota() {
+  listaNotas.push(_objectSpread({}, objNota));
+  mostrarNotas();
+  formulario.reset();
+  limpiarObjeto();
+}
+function refrescarHTML() {
+  var divNotas = document.querySelector(".div-notas");
+  while (divNotas.firstChild) {
+    divNotas.removeChild(divNotas.firstChild);
   }
 }
-formularioBuscar.addEventListener("submit", function (event) {
-  var divBuscado = document.querySelector("#div-buscado");
-  var nota = buscarNota(tituloBuscar.value);
-  console.log(nota);
-  divBuscado.innerHTML = "".concat(nota.fecha, " - ").concat(nota.titulo, " - ").concat(nota.texto, " - ");
-});
 },{}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
