@@ -75,17 +75,17 @@ function showNotas() {
     parrafo.textContent = `${fecha} - ${titulo} - ${texto} - `;
     parrafo.dataset.id = fecha;
 
-    const editarBoton = document.createElement("button");
-    editarBoton.onclick = () => cargarNota(nota);
-    editarBoton.textContent = "Editar";
-    editarBoton.classList.add("boton", "boton-editar");
-    parrafo.append(editarBoton);
+    const deleteBtn = document.createElement("button");
+    deleteBtn.onclick = () => deleteNota(titulo);
+    deleteBtn.textContent = "Eliminar";
+    deleteBtn.classList.add("btn", "btn-primary");
+    parrafo.append(deleteBtn);
 
-    const eliminarBoton = document.createElement("button");
-    eliminarBoton.onclick = () => deleteNota(titulo);
-    eliminarBoton.textContent = "Eliminar";
-    eliminarBoton.classList.add("boton", "boton-eliminar");
-    parrafo.append(eliminarBoton);
+    const editBtn = document.createElement("button");
+    editBtn.onclick = () => cargarNota(nota);
+    editBtn.textContent = "Editar";
+    editBtn.classList.add("btn", "btn-warning");
+    parrafo.append(editBtn);
 
     const hr = document.createElement("hr");
     divNotas.appendChild(parrafo);

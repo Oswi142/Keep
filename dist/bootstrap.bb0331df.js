@@ -117,110 +117,62 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/presenter.js":[function(require,module,exports) {
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-var listaNotas = [];
-var ObjetoNota = {
-  fecha: "",
-  titulo: "",
-  texto: ""
-};
-var edited = false;
-var form = document.querySelector("#form");
-var InsertTittle = document.querySelector("#titulo");
-var InsertText = document.querySelector("#texto");
-var botonCrear = document.querySelector("#btn-crear");
-form.addEventListener("submit", validarForm);
-function validarForm(e) {
-  e.preventDefault();
-  if (InsertTittle.value === "" || InsertText.value === "") {
-    alert("Se deben llenar todos los campos");
+})({"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+var bundleURL = null;
+function getBundleURLCached() {
+  if (!bundleURL) {
+    bundleURL = getBundleURL();
+  }
+  return bundleURL;
+}
+function getBundleURL() {
+  // Attempt to find the URL of the current script and use that as the base URL
+  try {
+    throw new Error();
+  } catch (err) {
+    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
+    if (matches) {
+      return getBaseURL(matches[0]);
+    }
+  }
+  return '/';
+}
+function getBaseURL(url) {
+  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
+}
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+},{}],"node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+var bundle = require('./bundle-url');
+function updateLink(link) {
+  var newLink = link.cloneNode();
+  newLink.onload = function () {
+    link.remove();
+  };
+  newLink.href = link.href.split('?')[0] + '?' + Date.now();
+  link.parentNode.insertBefore(newLink, link.nextSibling);
+}
+var cssTimeout = null;
+function reloadCSS() {
+  if (cssTimeout) {
     return;
   }
-  if (edited) {
-    editNota();
-    edited = false;
-  } else {
-    ObjetoNota.fecha = Date.now();
-    ObjetoNota.titulo = InsertTittle.value;
-    ObjetoNota.texto = InsertText.value;
-    createNota();
-  }
-  refreshHTML();
-  showNotas();
-  form.reset();
-  form.querySelector('button[type="submit"]').textContent = "Agregar";
-  edited = false;
+  cssTimeout = setTimeout(function () {
+    var links = document.querySelectorAll('link[rel="stylesheet"]');
+    for (var i = 0; i < links.length; i++) {
+      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
+        updateLink(links[i]);
+      }
+    }
+    cssTimeout = null;
+  }, 50);
 }
-function deleteNota(titulo) {
-  listaNotas = listaNotas.filter(function (nota) {
-    return nota.titulo !== titulo;
-  });
-  refreshHTML();
-  showNotas();
-}
-function createNota() {
-  listaNotas.push(_objectSpread({}, ObjetoNota));
-  showNotas();
-  form.reset();
-  cleanObj();
-}
-function cleanObj() {
-  ObjetoNota.fecha = "";
-  ObjetoNota.titulo = "";
-  ObjetoNota.texto = "";
-}
-function showNotas() {
-  refreshHTML();
-  var divNotas = document.querySelector(".div-notas");
-  listaNotas.forEach(function (nota) {
-    var fecha = nota.fecha,
-      titulo = nota.titulo,
-      texto = nota.texto;
-    var parrafo = document.createElement("p");
-    parrafo.textContent = "".concat(fecha, " - ").concat(titulo, " - ").concat(texto, " - ");
-    parrafo.dataset.id = fecha;
-    var deleteBtn = document.createElement("button");
-    deleteBtn.onclick = function () {
-      return deleteNota(titulo);
-    };
-    deleteBtn.textContent = "Eliminar";
-    deleteBtn.classList.add("btn", "btn-primary");
-    parrafo.append(deleteBtn);
-    var editBtn = document.createElement("button");
-    editBtn.onclick = function () {
-      return cargarNota(nota);
-    };
-    editBtn.textContent = "Editar";
-    editBtn.classList.add("btn", "btn-warning");
-    parrafo.append(editBtn);
-    var hr = document.createElement("hr");
-    divNotas.appendChild(parrafo);
-    divNotas.appendChild(hr);
-  });
-}
-function refreshHTML() {
-  var divNotas = document.querySelector(".div-notas");
-  while (divNotas.firstChild) {
-    divNotas.removeChild(divNotas.firstChild);
-  }
-}
-function cargarNota(nota) {
-  var fecha = nota.fecha,
-    titulo = nota.titulo,
-    texto = nota.texto;
-  InsertTittle.value = titulo;
-  InsertText.value = texto;
-  ObjetoNota.fecha = fecha;
-  form.querySelector('button[type="submit"]').textContent = "Actualizar";
-  edited = true;
-}
-},{}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+module.exports = reloadCSS;
+},{"./bundle-url":"node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"src/bootstrap.css":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -389,5 +341,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","src/presenter.js"], null)
-//# sourceMappingURL=/presenter.463783b4.js.map
+},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
+//# sourceMappingURL=/bootstrap.bb0331df.js.map
