@@ -175,6 +175,12 @@ function cleanObj() {
   ObjetoNota.titulo = "";
   ObjetoNota.texto = "";
 }
+function refreshHTML() {
+  var divNotas = document.querySelector(".div-notas");
+  while (divNotas.firstChild) {
+    divNotas.removeChild(divNotas.firstChild);
+  }
+}
 function showNotas() {
   refreshHTML();
   var divNotas = document.querySelector(".div-notas");
@@ -194,7 +200,7 @@ function showNotas() {
     parrafo.append(deleteBtn);
     var editBtn = document.createElement("button");
     editBtn.onclick = function () {
-      return cargarNota(nota);
+      return subirNota(nota);
     };
     editBtn.textContent = "Editar";
     editBtn.classList.add("btn", "btn-warning");
@@ -204,13 +210,7 @@ function showNotas() {
     divNotas.appendChild(hr);
   });
 }
-function refreshHTML() {
-  var divNotas = document.querySelector(".div-notas");
-  while (divNotas.firstChild) {
-    divNotas.removeChild(divNotas.firstChild);
-  }
-}
-function cargarNota(nota) {
+function subirNota(nota) {
   var fecha = nota.fecha,
     titulo = nota.titulo,
     texto = nota.texto;
@@ -219,6 +219,22 @@ function cargarNota(nota) {
   ObjetoNota.fecha = fecha;
   form.querySelector('button[type="submit"]').textContent = "Actualizar";
   edited = true;
+}
+function editNota() {
+  ObjetoNota.titulo = InsertTittle.value;
+  ObjetoNota.texto = InsertText.value;
+  listaNotas.map(function (nota) {
+    if (nota.fecha === ObjetoNota.fecha) {
+      nota.fecha = ObjetoNota.fecha;
+      nota.texto = ObjetoNota.texto;
+      nota.titulo = ObjetoNota.titulo;
+    }
+  });
+  refreshHTML();
+  showNotas();
+  form.reset();
+  form.querySelector('button[type="submit"]').textContent = "Agregar";
+  edited = false;
 }
 },{}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];

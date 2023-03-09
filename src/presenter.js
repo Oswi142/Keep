@@ -64,6 +64,13 @@ function cleanObj()
     ObjetoNota.texto = "";
 }
 
+function refreshHTML() {
+  const divNotas = document.querySelector(".div-notas");
+  while (divNotas.firstChild) {
+    divNotas.removeChild(divNotas.firstChild);
+  }
+}
+
 function showNotas() {
   refreshHTML();
   const divNotas = document.querySelector(".div-notas");
@@ -82,7 +89,7 @@ function showNotas() {
     parrafo.append(deleteBtn);
 
     const editBtn = document.createElement("button");
-    editBtn.onclick = () => cargarNota(nota);
+    editBtn.onclick = () => subirNota(nota);
     editBtn.textContent = "Editar";
     editBtn.classList.add("btn", "btn-warning");
     parrafo.append(editBtn);
@@ -93,14 +100,7 @@ function showNotas() {
   });
 }
 
-function refreshHTML() {
-  const divNotas = document.querySelector(".div-notas");
-  while (divNotas.firstChild) {
-    divNotas.removeChild(divNotas.firstChild);
-  }
-}
-
-function cargarNota(nota) 
+function subirNota(nota) 
 {
   const { fecha, titulo, texto } = nota;
   InsertTittle.value = titulo;
@@ -109,3 +109,23 @@ function cargarNota(nota)
   form.querySelector('button[type="submit"]').textContent = "Actualizar";
   edited = true;
 }
+
+function editNota() {
+  ObjetoNota.titulo = InsertTittle.value;
+  ObjetoNota.texto = InsertText.value;
+
+  listaNotas.map((nota) => {
+    if (nota.fecha === ObjetoNota.fecha) {
+      nota.fecha = ObjetoNota.fecha;
+      nota.texto = ObjetoNota.texto;
+      nota.titulo = ObjetoNota.titulo;
+    }
+  });
+  refreshHTML();
+  showNotas();
+  form.reset();
+  form.querySelector('button[type="submit"]').textContent = "Agregar";
+  edited = false;
+}
+
+
